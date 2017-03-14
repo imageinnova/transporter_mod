@@ -1,0 +1,6 @@
+{
+	"variants": {
+		"normal": { "model": "transporter:transporter" },
+		"inventory": { "model": "transporter:transporter" }
+	}
+}

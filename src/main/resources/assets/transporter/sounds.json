@@ -1,0 +1,9 @@
+{
+	"transport" : {
+		"category": "player",
+		"sounds": [
+			"tos_transporter8_clean",
+			"tos_transporterbeep"
+		]
+	}
+}

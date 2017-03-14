@@ -1,0 +1,38 @@
+# eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+gradle/
+build
+.gradle
+gradlew
+gradlew.bat
+gradle.properties
+build.gradle
+
+# other
+eclipse
+run
+saves/
+config/
+options.txt
+usercache.json
+usernamecache.json
+*.txt
+logs/
+crash-reports/
+*.launch
+# Minecraft
+minecraft
