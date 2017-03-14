@@ -158,6 +158,13 @@ public class GuiTransporter extends GuiContainer {
 		final int LABEL_YPOS = 5;
 		fontRendererObj.drawString(te.getDisplayName().getUnformattedText(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
 	}
+	
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		
+		this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, te.getStackInSlot(te.INPUT_SLOT));
+	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
@@ -178,7 +185,6 @@ public class GuiTransporter extends GuiContainer {
 		else {
 			try {	// not inside the map, do the default
 				super.mouseClicked(mouseX, mouseY, mouseButton);
-				this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, te.getStackInSlot(te.INPUT_SLOT));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

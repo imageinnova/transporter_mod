@@ -84,7 +84,7 @@ public class TileEntityTransporter extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int index) {
+	public ItemStack removeStackFromSlot(int index) {
 		ItemStack stack = this.getStackInSlot(index);
 	    this.setInventorySlotContents(index, null);
 	    return stack;
