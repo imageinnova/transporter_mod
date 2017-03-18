@@ -1,14 +1,13 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
-  "url": "",
-  "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "modid": "transporter",
+  "name": "Transporter",
+  "description": "A mod that enables the player to create transporters to rapidly move around the Overworld.",
+  "version": "1.0.0",
+  "mcversion": "1.8.9",
+  "url": "https://github.com/imageinnova",
+  "authorList": [ "MinerMaxDaddy", "DanTheMinerGuy" ],
+  "credits": "Built by MinerMaxDaddy with design input from DanTheMinerGuy",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
