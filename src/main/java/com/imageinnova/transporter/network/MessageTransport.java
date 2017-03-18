@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class MessageTransport implements IMessage {
 	private BlockPos to;
@@ -48,7 +50,8 @@ public class MessageTransport implements IMessage {
 				final TileEntityTransporter te = container.getTe();
 
 				// Send the player on their way
-				te.decrStackSize(te.INPUT_SLOT,  1);
+				IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+				itemHandler.extractItem(te.INPUT_SLOT, 1, false);
 				player.setPositionAndUpdate(message.to.getX(), message.to.getY(), message.to.getZ());
 				player.worldObj.playSound(null, message.to, TransporterSoundHandler.transport, SoundCategory.PLAYERS, 1.0f, 1.0f);
 

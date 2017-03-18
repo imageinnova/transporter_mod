@@ -4,13 +4,14 @@ import com.imageinnova.transporter.Transporter;
 import com.imageinnova.transporter.network.TransporterGuiHandler;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
 
-import net.minecraft.block.BlockContainer;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -18,8 +19,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
-public class BlockTransporter extends BlockContainer {
+public class BlockTransporter extends Block implements ITileEntityProvider {
 	protected BlockTransporter(String unlocalizedName) {
 		super(Material.IRON);
 		this.setRegistryName(Transporter.MODID, unlocalizedName);
@@ -54,7 +57,12 @@ public class BlockTransporter extends BlockContainer {
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState blockstate) {
 	    TileEntityTransporter te = (TileEntityTransporter) world.getTileEntity(pos);
-	    InventoryHelper.dropInventoryItems(world, pos, te);
+	    IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+	    ItemStack stack = itemHandler.getStackInSlot(te.INPUT_SLOT);
+	    if (stack != null) {
+	    	EntityItem item = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
+	    	world.spawnEntityInWorld(item);
+	    }
 	    super.breakBlock(world, pos, blockstate);
 	}
 
@@ -68,9 +76,11 @@ public class BlockTransporter extends BlockContainer {
 	@Override 
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
 			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-	    if (!worldIn.isRemote) {
-	        playerIn.openGui(Transporter.instance, TransporterGuiHandler.TRANSPORTER_ENTITY_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
+	    if (worldIn.isRemote) {
+	    	return true;
 	    }
+
+	    playerIn.openGui(Transporter.instance, TransporterGuiHandler.TRANSPORTER_ENTITY_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 	    return true;
 	}
 }

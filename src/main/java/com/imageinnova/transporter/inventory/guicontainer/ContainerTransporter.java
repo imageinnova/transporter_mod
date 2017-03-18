@@ -7,6 +7,9 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerTransporter extends Container {
 	private static final int HOTBAR_SLOT_COUNT = 9;
@@ -43,7 +46,8 @@ public class ContainerTransporter extends Container {
 	        }
 	    }
 	    */
-		this.addSlotToContainer(new Slot(te, 0, INVENTORY_X, INPUT_Y));
+		IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		this.addSlotToContainer(new SlotItemHandler(itemHandler, 0, INVENTORY_X, INPUT_Y));
 
 	    // Player Inventory, Slot 0-27, Slot IDs 1-27
 		for(int playerSlotIndexY = 0; playerSlotIndexY < PLAYER_INVENTORY_ROW_COUNT; ++playerSlotIndexY) {
@@ -71,7 +75,7 @@ public class ContainerTransporter extends Container {
 	        ItemStack current = slot.getStack();
 	        previous = current.copy();
 
-	        if (fromSlot < te.getSizeInventory()) {
+	        if (fromSlot < te.SIZE) {
 	            // From TE Inventory to Player Inventory
 	            if (!this.mergeItemStack(current, 1, 37, true))
 	                return null;
@@ -95,6 +99,6 @@ public class ContainerTransporter extends Container {
 	
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-		return this.te.isUseableByPlayer(playerIn);
+		return te.canInteractWith(playerIn);
 	}
 }

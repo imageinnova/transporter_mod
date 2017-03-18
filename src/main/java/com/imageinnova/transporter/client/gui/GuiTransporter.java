@@ -23,6 +23,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class GuiTransporter extends GuiContainer {
 	final static int MAP_X = 91;
@@ -70,7 +72,8 @@ public class GuiTransporter extends GuiContainer {
 			
 			// If the transporter is properly fueled, send the player. 
 			// Otherwise, drop the item
-			if (te.isItemValidForSlot(te.INPUT_SLOT, te.getStackInSlot(te.INPUT_SLOT))) {
+			IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+			if (te.isItemValidForSlot(te.INPUT_SLOT, itemHandler.getStackInSlot(te.INPUT_SLOT))) {
 				// The player chose a destination off the map
 				if (dest != null) {
 					pos = dest.add(0, 1, 0);
@@ -161,7 +164,8 @@ public class GuiTransporter extends GuiContainer {
 	public void updateScreen() {
 		super.updateScreen();
 		
-		this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, te.getStackInSlot(te.INPUT_SLOT));
+		IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, itemHandler.getStackInSlot(te.INPUT_SLOT));
 	}
 
 	@Override
