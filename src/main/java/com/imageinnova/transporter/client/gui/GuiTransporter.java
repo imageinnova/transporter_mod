@@ -42,14 +42,12 @@ public class GuiTransporter extends GuiContainer {
 
 	private GuiButton go;
 	private TileEntityTransporter te;
-//	private IInventory playerInv;
 	private HashMap<Point, BlockPos> transporterList = new HashMap<Point, BlockPos>();
 	private BlockPos dest;	
 	
 	public GuiTransporter(IInventory playerInv, TileEntityTransporter te) {
         super(new ContainerTransporter(playerInv, te));
         
-//        this.playerInv = playerInv;
         this.te = te;
         
 		this.xSize = 197;
@@ -67,7 +65,7 @@ public class GuiTransporter extends GuiContainer {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.go) {	//really, it's the only button right now
-			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+			EntityPlayer player = Minecraft.getMinecraft().player;
 			BlockPos pos = null;
 			
 			// If the transporter is properly fueled, send the player. 
@@ -96,13 +94,13 @@ public class GuiTransporter extends GuiContainer {
 					pos = player.getPosition();
 					pos = pos.add(deltaX, 0, deltaZ);
 					BlockPos posAbove = pos.add(0, 1, 0);
-					while (player.worldObj.getBlockState(pos).getBlock() != Blocks.AIR || player.worldObj.getBlockState(posAbove).getBlock() != Blocks.AIR) {
+					while (player.world.getBlockState(pos).getBlock() != Blocks.AIR || player.world.getBlockState(posAbove).getBlock() != Blocks.AIR) {
 						pos = pos.add(0, 1, 0);
 						posAbove = pos.add(0, 1, 0);
 					}
 					// make sure the player isn't standing on air, either
 					BlockPos posBelow = pos.add(0, -1, 0);
-					while (player.worldObj.getBlockState(posBelow).getBlock() == Blocks.AIR) {
+					while (player.world.getBlockState(posBelow).getBlock() == Blocks.AIR) {
 						pos = posBelow;
 						posBelow = posBelow.add(0, -1, 0);
 					}
@@ -136,7 +134,6 @@ public class GuiTransporter extends GuiContainer {
 		// plot the ones that are in the local region
 		List<TileEntity> list = te.getWorld().loadedTileEntityList;
 		transporterList.clear();
-//		ContainerTransporter container = (ContainerTransporter) this.inventorySlots;
 		for (TileEntity item : list) {
 			if (item instanceof TileEntityTransporter && item != te) { // exclude this transporter
 				// calculate x and y as relative to this position, scaled to map size
@@ -172,7 +169,6 @@ public class GuiTransporter extends GuiContainer {
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 		Point p = new Point(mouseX, mouseY);
 		Rectangle map = new Rectangle(MAP_X + guiLeft, MAP_Y + guiTop, MAP_WIDTH, MAP_HEIGHT);
-		//ContainerTransporter container = (ContainerTransporter) this.inventorySlots;
 
 		if (map.contains(p.x, p.y)) {
 			for (Map.Entry<Point, BlockPos> entry : transporterList.entrySet()) {

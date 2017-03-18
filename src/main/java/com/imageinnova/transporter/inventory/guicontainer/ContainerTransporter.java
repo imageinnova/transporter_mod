@@ -39,13 +39,6 @@ public class ContainerTransporter extends Container {
 		 */
 		
 		// Tile Entity, Slot 0-0, Slot IDs 0-0
-		/*
-	    for (int y = 0; y < 1; ++y) {
-	        for (int x = 0; x < 1; ++x) {
-	            this.addSlotToContainer(new Slot(te, x + y * 3, 62 + x * 18, 17 + y * 18));
-	        }
-	    }
-	    */
 		IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 		this.addSlotToContainer(new SlotItemHandler(itemHandler, 0, INVENTORY_X, INPUT_Y));
 
@@ -85,14 +78,14 @@ public class ContainerTransporter extends Container {
 	                return null;
 	        }
 
-	        if (current.stackSize == 0)
-	            slot.putStack((ItemStack) null);
+	        if (current.getCount() == 0)
+	            slot.getStack().setCount(0);
 	        else
 	            slot.onSlotChanged();
 
-	        if (current.stackSize == previous.stackSize)
+	        if (current.getCount() == previous.getCount())
 	            return null;
-	        slot.onPickupFromSlot(playerIn, current);
+	        slot.onTake(playerIn, current);
 	    }
 	    return previous;
 	}

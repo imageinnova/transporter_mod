@@ -61,7 +61,7 @@ public class BlockTransporter extends Block implements ITileEntityProvider {
 	    ItemStack stack = itemHandler.getStackInSlot(te.INPUT_SLOT);
 	    if (stack != null) {
 	    	EntityItem item = new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), stack);
-	    	world.spawnEntityInWorld(item);
+	    	world.spawnEntity(item);
 	    }
 	    super.breakBlock(world, pos, blockstate);
 	}
@@ -75,7 +75,7 @@ public class BlockTransporter extends Block implements ITileEntityProvider {
 	
 	@Override 
 	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
-			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+			EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 	    if (worldIn.isRemote) {
 	    	return true;
 	    }

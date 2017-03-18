@@ -4,7 +4,7 @@
   "name": "Transporter",
   "description": "A mod that enables the player to create transporters to rapidly move around the Overworld.",
   "version": "1.0.0",
-  "mcversion": "1.10.2",
+  "mcversion": "1.11.2",
   "url": "https://github.com/imageinnova",
   "authorList": [ "MinerMaxDaddy", "DanTheMinerGuy" ],
   "credits": "Built by MinerMaxDaddy with design input from DanTheMinerGuy",

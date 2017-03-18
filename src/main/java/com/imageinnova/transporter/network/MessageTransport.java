@@ -53,7 +53,7 @@ public class MessageTransport implements IMessage {
 				IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 				itemHandler.extractItem(te.INPUT_SLOT, 1, false);
 				player.setPositionAndUpdate(message.to.getX(), message.to.getY(), message.to.getZ());
-				player.worldObj.playSound(null, message.to, TransporterSoundHandler.transport, SoundCategory.PLAYERS, 1.0f, 1.0f);
+				player.world.playSound(null, message.to, TransporterSoundHandler.transport, SoundCategory.PLAYERS, 1.0f, 1.0f);
 
 			}
 			return null;
