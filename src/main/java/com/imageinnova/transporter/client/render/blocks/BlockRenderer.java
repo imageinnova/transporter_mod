@@ -1,14 +1,17 @@
 package com.imageinnova.transporter.client.render.blocks;
 
 import com.imageinnova.transporter.blocks.BlocksCreator;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class BlockRenderer {
 	public static void registerBlockRenderer() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
-	    .register(Item.getItemFromBlock(BlocksCreator.transporter), 0, new ModelResourceLocation("transporter:transporter", "inventory"));
+		ItemBlock itemBlock = new ItemBlock(BlocksCreator.transporter);
+		itemBlock.setRegistryName(BlocksCreator.transporter.getRegistryName());
+		GameRegistry.register(itemBlock);
+
+		ModelLoader.setCustomModelResourceLocation(itemBlock, 0, new ModelResourceLocation(itemBlock.getRegistryName().toString(), "inventory"));
 	}
 }

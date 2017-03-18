@@ -11,13 +11,12 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void preInit(FMLPreInitializationEvent e) {
 		super.preInit(e);
+		BlockRenderer.registerBlockRenderer();
 	}
 
 	@Override
 	public void init(FMLInitializationEvent e) {
 		super.init(e);
-		
-		BlockRenderer.registerBlockRenderer();
 	}
 
 	@Override

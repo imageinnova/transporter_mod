@@ -7,9 +7,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 public class TileEntityTransporter extends TileEntity implements IInventory {
 	public final int INPUT_SLOT = 0;
@@ -39,8 +39,8 @@ public class TileEntityTransporter extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public IChatComponent getDisplayName() {
-		return this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName());
+	public ITextComponent getDisplayName() {
+		return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
 	}
 
 	@Override
@@ -125,7 +125,7 @@ public class TileEntityTransporter extends TileEntity implements IInventory {
 
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		return (stack != null && stack.getItem() == Items.redstone); 
+		return (stack != null && stack.getItem() == Items.REDSTONE); 
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class TileEntityTransporter extends TileEntity implements IInventory {
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound nbt) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 	    super.writeToNBT(nbt);
 
 	    NBTTagList list = new NBTTagList();
@@ -167,6 +167,8 @@ public class TileEntityTransporter extends TileEntity implements IInventory {
 	    if (this.hasCustomName()) {
 	        nbt.setString("CustomName", this.getCustomName());
 	    }
+	    
+	    return nbt;
 	}
 
 	@Override

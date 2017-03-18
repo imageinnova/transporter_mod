@@ -36,3 +36,4 @@ crash-reports/
 *.launch
 # Minecraft
 minecraft
+src/main/java/com/example/examplemod/ExampleMod.java

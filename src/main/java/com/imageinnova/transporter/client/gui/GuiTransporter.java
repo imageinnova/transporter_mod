@@ -21,8 +21,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 
 public class GuiTransporter extends GuiContainer {
 	final static int MAP_X = 91;
@@ -56,7 +56,6 @@ public class GuiTransporter extends GuiContainer {
 		this.dest = null;
     }
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -94,19 +93,19 @@ public class GuiTransporter extends GuiContainer {
 					pos = player.getPosition();
 					pos = pos.add(deltaX, 0, deltaZ);
 					BlockPos posAbove = pos.add(0, 1, 0);
-					while (player.worldObj.getBlockState(pos).getBlock() != Blocks.air || player.worldObj.getBlockState(posAbove).getBlock() != Blocks.air) {
+					while (player.worldObj.getBlockState(pos).getBlock() != Blocks.AIR || player.worldObj.getBlockState(posAbove).getBlock() != Blocks.AIR) {
 						pos = pos.add(0, 1, 0);
 						posAbove = pos.add(0, 1, 0);
 					}
 					// make sure the player isn't standing on air, either
 					BlockPos posBelow = pos.add(0, -1, 0);
-					while (player.worldObj.getBlockState(posBelow).getBlock() == Blocks.air) {
+					while (player.worldObj.getBlockState(posBelow).getBlock() == Blocks.AIR) {
 						pos = posBelow;
 						posBelow = posBelow.add(0, -1, 0);
 					}
 				}
 				// send the request to the server to execute
-				Transporter.network.sendToServer(new MessageTransport(te.getPos(), pos));
+				Transporter.network.sendToServer(new MessageTransport(pos));
 
 				// close the GUI
 				this.mc.displayGuiScreen(null);
@@ -132,7 +131,6 @@ public class GuiTransporter extends GuiContainer {
 		
 		// get the list of all tile entities, then pick out the transporters and  
 		// plot the ones that are in the local region
-		@SuppressWarnings("unchecked")
 		List<TileEntity> list = te.getWorld().loadedTileEntityList;
 		transporterList.clear();
 //		ContainerTransporter container = (ContainerTransporter) this.inventorySlots;

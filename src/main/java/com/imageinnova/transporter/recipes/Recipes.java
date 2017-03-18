@@ -9,6 +9,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class Recipes {
 	public static void init() {
-		GameRegistry.addRecipe(new ItemStack(BlocksCreator.transporter), new Object[] {"ooo", "odo", "ooo", 'o', Blocks.obsidian, 'd', Items.diamond});
+		GameRegistry.addRecipe(new ItemStack(BlocksCreator.transporter), new Object[] {"ooo", "odo", "ooo", 'o', Blocks.OBSIDIAN, 'd', Items.DIAMOND});
 	}
 }

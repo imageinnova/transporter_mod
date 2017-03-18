@@ -5,11 +5,11 @@ import com.imageinnova.transporter.inventory.guicontainer.ContainerTransporter;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-public class ModGuiHandler implements IGuiHandler {
+public class TransporterGuiHandler implements IGuiHandler {
 	public static final int TRANSPORTER_ENTITY_GUI = 0;
 	
 	@Override

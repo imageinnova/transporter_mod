@@ -1,6 +1,12 @@
 {
+	"forge_marker": 1,
 	"variants": {
-		"normal": { "model": "transporter:transporter" },
-		"inventory": { "model": "transporter:transporter" }
+		"normal": {
+			"model": "transporter:transporter_model"
+		},
+		"inventory": {
+			"model": "transporter:transporter_model",
+			"transform": "forge:default-block"
+		}
 	}
 }

@@ -1,7 +1,7 @@
 package com.imageinnova.transporter.blocks;
 
 import com.imageinnova.transporter.Transporter;
-import com.imageinnova.transporter.network.ModGuiHandler;
+import com.imageinnova.transporter.network.TransporterGuiHandler;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
 
 import net.minecraft.block.BlockContainer;
@@ -13,19 +13,32 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockTransporter extends BlockContainer {
 	protected BlockTransporter(String unlocalizedName) {
-		super(Material.iron);
+		super(Material.IRON);
+		this.setRegistryName(Transporter.MODID, unlocalizedName);
 		this.setUnlocalizedName(unlocalizedName);
-		setCreativeTab(CreativeTabs.tabRedstone);
+		setCreativeTab(CreativeTabs.REDSTONE);
 		this.setHardness(2.0f);
 		this.setResistance(6.0f);
 		this.setHarvestLevel("pickaxe", 2);
 		this.setLightLevel(0.5f); 
+	}
+
+	@Override
+	public boolean isFullCube(IBlockState state) {
+		return true;
+	}
+
+	@Override
+	public boolean isOpaqueCube(IBlockState state) {
+		return true;
 	}
 
 	@Override
@@ -34,8 +47,8 @@ public class BlockTransporter extends BlockContainer {
 	}
 	
 	@Override
-	public int getRenderType() {
-		return 3;
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
@@ -52,10 +65,11 @@ public class BlockTransporter extends BlockContainer {
 	    }
 	}
 	
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-	    if (!world.isRemote) {
-	        player.openGui(Transporter.instance, ModGuiHandler.TRANSPORTER_ENTITY_GUI, world, pos.getX(), pos.getY(), pos.getZ());
+	@Override 
+	public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn,
+			EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+	    if (!worldIn.isRemote) {
+	        playerIn.openGui(Transporter.instance, TransporterGuiHandler.TRANSPORTER_ENTITY_GUI, worldIn, pos.getX(), pos.getY(), pos.getZ());
 	    }
 	    return true;
 	}

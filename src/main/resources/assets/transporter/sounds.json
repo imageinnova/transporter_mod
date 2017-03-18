@@ -2,8 +2,8 @@
 	"transport" : {
 		"category": "player",
 		"sounds": [
-			"tos_transporter8_clean",
-			"tos_transporterbeep"
+			"transporter:tos_transporter8_clean",
+			"transporter:tos_transporterbeep"
 		]
 	}
 }
