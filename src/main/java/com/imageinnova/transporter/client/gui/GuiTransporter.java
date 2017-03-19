@@ -20,9 +20,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
@@ -41,6 +43,7 @@ public class GuiTransporter extends GuiContainer {
 	final static int MAP_RADIUS = 42;
 
 	private GuiButton go;
+	private GuiSlider distSlider;
 	private TileEntityTransporter te;
 	private HashMap<Point, BlockPos> transporterList = new HashMap<Point, BlockPos>();
 	private BlockPos dest;	
@@ -50,7 +53,7 @@ public class GuiTransporter extends GuiContainer {
         
         this.te = te;
         
-		this.xSize = 197;
+		this.xSize = 187;
 		this.ySize = 225;
 		
 		this.dest = null;
@@ -59,17 +62,22 @@ public class GuiTransporter extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-	    this.buttonList.add(this.go = new GuiButton(0, this.guiLeft + 5, this.guiTop + 111, 58, 20, "Fly Away"));
+	    buttonList.add(go = new GuiButton(0, this.guiLeft + 5, this.guiTop + 111, 58, 20, "Fly Away"));
+	    buttonList.add(distSlider = new GuiSlider(1, this.guiLeft + 5, this.guiTop + 82, 80, 20, "", "", 100, 1000, 100, false, true));
+	}
+	
+	private int getDist() {
+		return Math.round((float) distSlider.sliderValue * 900) + 100;
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button == this.go) {	//really, it's the only button right now
+		
+		if (button == this.go) {	// user chose to launch
 			EntityPlayer player = Minecraft.getMinecraft().player;
 			BlockPos pos = null;
 			
 			// If the transporter is properly fueled, send the player. 
-			// Otherwise, drop the item
 			IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 			if (te.isItemValidForSlot(te.INPUT_SLOT, itemHandler.getStackInSlot(te.INPUT_SLOT))) {
 				// The player chose a destination off the map
@@ -87,8 +95,8 @@ public class GuiTransporter extends GuiContainer {
 					// x -= r sin(T)
 					// z += r cos(T)
 					int yaw = Math.floorMod((int) player.rotationYawHead, 360);
-					double deltaX = -Transporter.TRANSPORTER_DISTANCE * Math.sin(Math.toRadians(yaw));
-					double deltaZ = Transporter.TRANSPORTER_DISTANCE * Math.cos(Math.toRadians(yaw));
+					double deltaX = -getDist() * Math.sin(Math.toRadians(yaw));
+					double deltaZ = getDist() * Math.cos(Math.toRadians(yaw));
 					
 					// Is the new location a safe place, i.e. no collision
 					pos = player.getPosition();
@@ -114,6 +122,14 @@ public class GuiTransporter extends GuiContainer {
 					this.mc.setIngameFocus();
 				}
 			}
+			/*
+			else if (button == distSlider) {
+				final int VALUE_XPOS = 5;
+				final int VALUE_YPOS = 55;
+				Double dist = distSlider.sliderValue;
+				fontRendererObj.drawString(dist.toString(), VALUE_XPOS, VALUE_YPOS, Color.darkGray.getRGB());
+			}
+			*/
 		}
 		else {
 			super.actionPerformed(button);
@@ -137,8 +153,8 @@ public class GuiTransporter extends GuiContainer {
 		for (TileEntity item : list) {
 			if (item instanceof TileEntityTransporter && item != te) { // exclude this transporter
 				// calculate x and y as relative to this position, scaled to map size
-				int x = (item.getPos().getX() - te.getPos().getX()) * MAP_RADIUS / Transporter.TRANSPORTER_DISTANCE;
-				int y = (item.getPos().getZ() - te.getPos().getZ()) * MAP_RADIUS / Transporter.TRANSPORTER_DISTANCE;
+				int x = (item.getPos().getX() - te.getPos().getX()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
+				int y = (item.getPos().getZ() - te.getPos().getZ()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
 				if (Math.abs(x) < MAP_RADIUS && Math.abs(y) < MAP_RADIUS) {
 					x += guiLeft + MAP_CENTER_X - TRANSPORTER_WIDTH / 2;
 					y += guiTop + MAP_CENTER_Y - TRANSPORTER_HEIGHT / 2;
@@ -162,7 +178,15 @@ public class GuiTransporter extends GuiContainer {
 		super.updateScreen();
 		
 		IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-		this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, itemHandler.getStackInSlot(te.INPUT_SLOT));
+		int fuelNeeded;
+		if (dest == null) {
+			fuelNeeded = Math.round((float)getDist() / 100);
+		}
+		else {
+			fuelNeeded = Math.round((float) dest.getDistance(te.getPos().getX(), dest.getY(), te.getPos().getZ()) / 100);
+		}
+		ItemStack fuelStack = itemHandler.getStackInSlot(te.INPUT_SLOT);
+		this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, fuelStack) && fuelStack.getCount() >= fuelNeeded;
 	}
 
 	@Override

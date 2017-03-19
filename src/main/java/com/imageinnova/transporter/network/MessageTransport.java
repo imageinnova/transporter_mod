@@ -50,8 +50,9 @@ public class MessageTransport implements IMessage {
 				final TileEntityTransporter te = container.getTe();
 
 				// Send the player on their way
+				int fuelNeeded = Math.round((float) message.to.getDistance(te.getPos().getX(), message.to.getY(), te.getPos().getZ()) / 100);
 				IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-				itemHandler.extractItem(te.INPUT_SLOT, 1, false);
+				itemHandler.extractItem(te.INPUT_SLOT, fuelNeeded, false);
 				player.setPositionAndUpdate(message.to.getX(), message.to.getY(), message.to.getZ());
 				player.world.playSound(null, message.to, TransporterSoundHandler.transport, SoundCategory.PLAYERS, 1.0f, 1.0f);
 

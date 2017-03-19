@@ -15,7 +15,7 @@ public class ContainerTransporter extends Container {
 	private static final int HOTBAR_SLOT_COUNT = 9;
 	private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
 	private static final int NUM_SLOTS_PER_ROW = 9;
-	private static final int INPUT_Y = 77;	// y position of input slot
+	private static final int INPUT_Y = 39;	// y position of input slot
 	private static final int INVENTORY_X = 6;
 	private static final int INVENTORY_Y = 138;
 	private static final int HOT_BAR_Y = 202;

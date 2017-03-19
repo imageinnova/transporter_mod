@@ -20,7 +20,6 @@ build
 gradlew
 gradlew.bat
 gradle.properties
-build.gradle
 
 # other
 eclipse
