@@ -3,6 +3,7 @@ package com.imageinnova.transporter.inventory.guicontainer;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -61,7 +62,8 @@ public class ContainerTransporter extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot) {
-	    ItemStack previous = null;
+		ItemStack empty = new ItemStack(Blocks.DIRT, 0);
+	    ItemStack previous = empty;
 	    Slot slot = (Slot) this.inventorySlots.get(fromSlot);
 
 	    if (slot != null && slot.getHasStack()) {
@@ -71,11 +73,11 @@ public class ContainerTransporter extends Container {
 	        if (fromSlot < te.SIZE) {
 	            // From TE Inventory to Player Inventory
 	            if (!this.mergeItemStack(current, 1, 37, true))
-	                return null;
+	                return empty;
 	        } else {
 	            // From Player Inventory to TE Inventory
 	            if (!this.mergeItemStack(current, 0, 1, false))
-	                return null;
+	                return empty;
 	        }
 
 	        if (current.getCount() == 0)
@@ -84,7 +86,7 @@ public class ContainerTransporter extends Container {
 	            slot.onSlotChanged();
 
 	        if (current.getCount() == previous.getCount())
-	            return null;
+	            return empty;
 	        slot.onTake(playerIn, current);
 	    }
 	    return previous;
