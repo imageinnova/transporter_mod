@@ -18,7 +18,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -41,6 +40,8 @@ public class GuiTransporter extends GuiContainer {
 	final static int MAP_CENTER_X = 137;
 	final static int MAP_CENTER_Y = 84;
 	final static int MAP_RADIUS = 42;
+	final static int SLIDER_MIN = 100;
+	final static int SLIDER_MAX = Transporter.MAX_TRANSPORTER_DISTANCE;
 
 	private GuiButton go;
 	private GuiSlider distSlider;
@@ -63,11 +64,11 @@ public class GuiTransporter extends GuiContainer {
 	public void initGui() {
 		super.initGui();
 	    buttonList.add(go = new GuiButton(0, this.guiLeft + 5, this.guiTop + 111, 58, 20, "Fly Away"));
-	    buttonList.add(distSlider = new GuiSlider(1, this.guiLeft + 5, this.guiTop + 82, 80, 20, "", "", 100, 1000, 100, false, true));
+	    buttonList.add(distSlider = new GuiSlider(1, this.guiLeft + 5, this.guiTop + 82, 80, 20, "", "", SLIDER_MIN, SLIDER_MAX, 100, false, true));
 	}
 	
 	private int getDist() {
-		return Math.round((float) distSlider.sliderValue * 900) + 100;
+		return Math.round((float) distSlider.sliderValue * (SLIDER_MAX - SLIDER_MIN)) + SLIDER_MIN;
 	}
 
 	@Override
@@ -84,8 +85,8 @@ public class GuiTransporter extends GuiContainer {
 				if (dest != null) {
 					pos = dest.add(0, 1, 0);
 				}
-				// No transporter selected; set coordinates for 100m from current position 
-				// based on direction of player
+				// No transporter selected; set coordinates for selected distance from  
+				// current position based on direction of player
 				else {	
 					// North = negative z
 					// East = positive x
@@ -98,20 +99,11 @@ public class GuiTransporter extends GuiContainer {
 					double deltaX = -getDist() * Math.sin(Math.toRadians(yaw));
 					double deltaZ = getDist() * Math.cos(Math.toRadians(yaw));
 					
-					// Is the new location a safe place, i.e. no collision
+					// Transport the player on the horizontal plane, then move up or down
+					// as necessary to ensure the player won't be suffocated or transport
+					// into thin air
 					pos = player.getPosition();
 					pos = pos.add(deltaX, 0, deltaZ);
-					BlockPos posAbove = pos.add(0, 1, 0);
-					while (player.world.getBlockState(pos).getBlock() != Blocks.AIR || player.world.getBlockState(posAbove).getBlock() != Blocks.AIR) {
-						pos = pos.add(0, 1, 0);
-						posAbove = pos.add(0, 1, 0);
-					}
-					// make sure the player isn't standing on air, either
-					BlockPos posBelow = pos.add(0, -1, 0);
-					while (player.world.getBlockState(posBelow).getBlock() == Blocks.AIR) {
-						pos = posBelow;
-						posBelow = posBelow.add(0, -1, 0);
-					}
 				}
 				// send the request to the server to execute
 				Transporter.network.sendToServer(new MessageTransport(pos));
@@ -122,14 +114,6 @@ public class GuiTransporter extends GuiContainer {
 					this.mc.setIngameFocus();
 				}
 			}
-			/*
-			else if (button == distSlider) {
-				final int VALUE_XPOS = 5;
-				final int VALUE_YPOS = 55;
-				Double dist = distSlider.sliderValue;
-				fontRendererObj.drawString(dist.toString(), VALUE_XPOS, VALUE_YPOS, Color.darkGray.getRGB());
-			}
-			*/
 		}
 		else {
 			super.actionPerformed(button);
@@ -151,7 +135,7 @@ public class GuiTransporter extends GuiContainer {
 		List<TileEntity> list = te.getWorld().loadedTileEntityList;
 		transporterList.clear();
 		for (TileEntity item : list) {
-			if (item instanceof TileEntityTransporter && item != te) { // exclude this transporter
+			if (item instanceof TileEntityTransporter && !item.equals(te)) { // exclude this transporter
 				// calculate x and y as relative to this position, scaled to map size
 				int x = (item.getPos().getX() - te.getPos().getX()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
 				int y = (item.getPos().getZ() - te.getPos().getZ()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;

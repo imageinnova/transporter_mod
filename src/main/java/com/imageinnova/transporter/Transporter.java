@@ -14,7 +14,7 @@ public class Transporter {
 	public static final String MODID = "transporter";
 	public static final String MODNAME = "Transporter";
 	public static final String VERSION = "1.0.1";
-	public static final int MAX_TRANSPORTER_DISTANCE = 1000;
+	public static final int MAX_TRANSPORTER_DISTANCE = 180;
 	@Instance
 	public static Transporter instance;
     public static SimpleNetworkWrapper network;

@@ -6,8 +6,10 @@ import com.imageinnova.transporter.tileentities.TileEntityTransporter;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -48,13 +50,30 @@ public class MessageTransport implements IMessage {
 			if (player.openContainer instanceof ContainerTransporter) {
 				ContainerTransporter container = (ContainerTransporter) player.openContainer;
 				final TileEntityTransporter te = container.getTe();
+				
+				BlockPos pos = message.to;
+				Chunk ch = player.world.getChunkFromBlockCoords(pos);
+				player.world.getChunkProvider().getLoadedChunk(ch.xPosition, ch.zPosition);
+
+				// Is the new location a safe place, i.e. no collision
+				BlockPos posAbove = pos.add(0, 1, 0);
+				while (player.world.getBlockState(pos).getBlock() != Blocks.AIR || player.world.getBlockState(posAbove).getBlock() != Blocks.AIR) {
+					pos = pos.add(0, 1, 0);
+					posAbove = pos.add(0, 1, 0);
+				}
+				// make sure the player isn't standing on air, either
+				BlockPos posBelow = pos.add(0, -1, 0);
+				while (player.world.getBlockState(posBelow).getBlock() == Blocks.AIR) {
+					pos = posBelow;
+					posBelow = posBelow.add(0, -1, 0);
+				}
 
 				// Send the player on their way
-				int fuelNeeded = Math.round((float) message.to.getDistance(te.getPos().getX(), message.to.getY(), te.getPos().getZ()) / 100);
+				int fuelNeeded = Math.round((float) pos.getDistance(te.getPos().getX(), pos.getY(), te.getPos().getZ()) / 100);
 				IItemHandler itemHandler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 				itemHandler.extractItem(te.INPUT_SLOT, fuelNeeded, false);
-				player.setPositionAndUpdate(message.to.getX(), message.to.getY(), message.to.getZ());
-				player.world.playSound(null, message.to, TransporterSoundHandler.transport, SoundCategory.PLAYERS, 1.0f, 1.0f);
+				player.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+				player.world.playSound(null, pos, TransporterSoundHandler.transport, SoundCategory.PLAYERS, 1.0f, 1.0f);
 
 			}
 			return null;
