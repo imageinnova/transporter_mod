@@ -1,7 +1,6 @@
 package com.imageinnova.transporter;
 
 import com.imageinnova.transporter.client.render.blocks.BlockRenderer;
-
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;

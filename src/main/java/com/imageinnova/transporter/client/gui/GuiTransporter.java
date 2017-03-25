@@ -11,7 +11,9 @@ import java.util.Map;
 import com.imageinnova.transporter.Transporter;
 import com.imageinnova.transporter.inventory.guicontainer.ContainerTransporter;
 import com.imageinnova.transporter.network.MessageTransport;
+import com.imageinnova.transporter.network.MessageTransporterList;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
+import com.imageinnova.transporter.worldsaveddata.TransporterList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -20,7 +22,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiSlider;
@@ -132,18 +133,20 @@ public class GuiTransporter extends GuiContainer {
 		
 		// get the list of all tile entities, then pick out the transporters and  
 		// plot the ones that are in the local region
-		List<TileEntity> list = te.getWorld().loadedTileEntityList;
+		//List<TileEntity> list = te.getWorld().loadedTileEntityList;
+		Transporter.network.sendToServer(new MessageTransporterList());
+		List<BlockPos> list = Transporter.transporterList;
 		transporterList.clear();
-		for (TileEntity item : list) {
-			if (item instanceof TileEntityTransporter && !item.equals(te)) { // exclude this transporter
+		for (BlockPos item : list) {
+			if (!item.equals(te.getPos())) { // exclude this transporter
 				// calculate x and y as relative to this position, scaled to map size
-				int x = (item.getPos().getX() - te.getPos().getX()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
-				int y = (item.getPos().getZ() - te.getPos().getZ()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
+				int x = (item.getX() - te.getPos().getX()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
+				int y = (item.getZ() - te.getPos().getZ()) * MAP_RADIUS / Transporter.MAX_TRANSPORTER_DISTANCE;
 				if (Math.abs(x) < MAP_RADIUS && Math.abs(y) < MAP_RADIUS) {
 					x += guiLeft + MAP_CENTER_X - TRANSPORTER_WIDTH / 2;
 					y += guiTop + MAP_CENTER_Y - TRANSPORTER_HEIGHT / 2;
-					transporterList.put(new Point(x, y), item.getPos());
-					int iconY = (this.dest != null && this.dest.equals(item.getPos())) ? TRANSPORTER_SEL_Y : TRANSPORTER_ICON_Y;
+					transporterList.put(new Point(x, y), item);
+					int iconY = (this.dest != null && this.dest.equals(item)) ? TRANSPORTER_SEL_Y : TRANSPORTER_ICON_Y;
 					drawTexturedModalRect(x, y, TRANSPORTER_ICON_X, iconY, TRANSPORTER_WIDTH, TRANSPORTER_HEIGHT);
 				}
 			}

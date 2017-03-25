@@ -3,6 +3,7 @@ package com.imageinnova.transporter.blocks;
 import com.imageinnova.transporter.Transporter;
 import com.imageinnova.transporter.network.TransporterGuiHandler;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
+import com.imageinnova.transporter.worldsaveddata.TransporterList;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -64,12 +65,18 @@ public class BlockTransporter extends Block implements ITileEntityProvider {
 	    	world.spawnEntity(item);
 	    }
 	    super.breakBlock(world, pos, blockstate);
+	    if (!world.isRemote) {
+	    	TransporterList.get(world).remove(pos);
+	    }
 	}
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
 	    if (stack.hasDisplayName()) {
 	        ((TileEntityTransporter) worldIn.getTileEntity(pos)).setCustomName(stack.getDisplayName());
+	    }
+	    if (!worldIn.isRemote) {
+	    	TransporterList.get(worldIn).add(pos);
 	    }
 	}
 	
