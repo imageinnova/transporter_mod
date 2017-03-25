@@ -6,12 +6,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 
 public class TransporterSoundHandler {
+	public static SoundEvent computer;
 	public static SoundEvent transport;
 	
 	private static int size = 0;
 	
 	public static void init() {
 		size = SoundEvent.REGISTRY.getKeys().size();
+		
+		computer = register("computer");
 		
 		transport = register("transport");
 	}

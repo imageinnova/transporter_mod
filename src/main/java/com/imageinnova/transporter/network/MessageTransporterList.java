@@ -7,7 +7,6 @@ import com.imageinnova.transporter.Transporter;
 import com.imageinnova.transporter.worldsaveddata.TransporterList;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

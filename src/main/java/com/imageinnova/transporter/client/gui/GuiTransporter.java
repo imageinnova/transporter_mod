@@ -12,9 +12,8 @@ import com.imageinnova.transporter.Transporter;
 import com.imageinnova.transporter.inventory.guicontainer.ContainerTransporter;
 import com.imageinnova.transporter.network.MessageTransport;
 import com.imageinnova.transporter.network.MessageTransporterList;
+import com.imageinnova.transporter.sound.TransporterSoundHandler;
 import com.imageinnova.transporter.tileentities.TileEntityTransporter;
-import com.imageinnova.transporter.worldsaveddata.TransporterList;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -23,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.client.config.GuiSlider;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -173,7 +173,12 @@ public class GuiTransporter extends GuiContainer {
 			fuelNeeded = Math.round((float) dest.getDistance(te.getPos().getX(), dest.getY(), te.getPos().getZ()) / 100);
 		}
 		ItemStack fuelStack = itemHandler.getStackInSlot(te.INPUT_SLOT);
-		this.go.enabled = te.isItemValidForSlot(te.INPUT_SLOT, fuelStack) && fuelStack.getCount() >= fuelNeeded;
+		
+		boolean sufficientFuel = te.isItemValidForSlot(te.INPUT_SLOT, fuelStack) && fuelStack.getCount() >= fuelNeeded;
+		if (!go.enabled && sufficientFuel) {
+			te.getWorld().playSound(Minecraft.getMinecraft().player, te.getPos(), TransporterSoundHandler.computer, SoundCategory.PLAYERS, 1.0F, 1.0F);
+		}
+		this.go.enabled = sufficientFuel;
 	}
 
 	@Override

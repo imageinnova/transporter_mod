@@ -61,7 +61,7 @@ public class ContainerTransporter extends Container {
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int fromSlot) {
-	    ItemStack previous = null;
+	    ItemStack previous = ItemStack.EMPTY;
 	    Slot slot = (Slot) this.inventorySlots.get(fromSlot);
 
 	    if (slot != null && slot.getHasStack()) {
@@ -71,11 +71,11 @@ public class ContainerTransporter extends Container {
 	        if (fromSlot < te.SIZE) {
 	            // From TE Inventory to Player Inventory
 	            if (!this.mergeItemStack(current, 1, 37, true))
-	                return null;
+	                return ItemStack.EMPTY;
 	        } else {
 	            // From Player Inventory to TE Inventory
 	            if (!this.mergeItemStack(current, 0, 1, false))
-	                return null;
+	                return ItemStack.EMPTY;
 	        }
 
 	        if (current.getCount() == 0)
@@ -84,7 +84,7 @@ public class ContainerTransporter extends Container {
 	            slot.onSlotChanged();
 
 	        if (current.getCount() == previous.getCount())
-	            return null;
+	            return ItemStack.EMPTY;
 	        slot.onTake(playerIn, current);
 	    }
 	    return previous;

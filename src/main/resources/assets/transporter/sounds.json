@@ -1,4 +1,11 @@
 {
+	"computer" : {
+		"category": "player",
+		"sounds": [
+			"transporter:tos_computer_03",
+			"transporter:tos_computer_06"
+		]
+	},
 	"transport" : {
 		"category": "player",
 		"sounds": [
