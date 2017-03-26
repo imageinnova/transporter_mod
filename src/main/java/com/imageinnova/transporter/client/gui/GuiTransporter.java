@@ -158,6 +158,7 @@ public class GuiTransporter extends GuiContainer {
 		final int LABEL_XPOS = 5;
 		final int LABEL_YPOS = 5;
 		fontRendererObj.drawString(te.getDisplayName().getUnformattedText(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
+		fontRendererObj.drawString("Distance", LABEL_XPOS, guiTop + 62, Color.darkGray.getRGB());
 	}
 	
 	@Override

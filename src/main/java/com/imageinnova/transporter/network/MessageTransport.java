@@ -52,20 +52,26 @@ public class MessageTransport implements IMessage {
 				final TileEntityTransporter te = container.getTe();
 				
 				BlockPos pos = message.to;
+				// position to get chunk load rolling
+				player.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
 				Chunk ch = player.world.getChunkFromBlockCoords(pos);
-				player.world.getChunkProvider().getLoadedChunk(ch.xPosition, ch.zPosition);
+				ch = player.world.getChunkProvider().getLoadedChunk(ch.xPosition, ch.zPosition);
+				while (!player.world.isChunkGeneratedAt(ch.xPosition, ch.zPosition) || !ch.isLoaded()) {
+					//
+				};
 
-				// Is the new location a safe place, i.e. no collision
-				BlockPos posAbove = pos.add(0, 1, 0);
-				while (player.world.getBlockState(pos).getBlock() != Blocks.AIR || player.world.getBlockState(posAbove).getBlock() != Blocks.AIR) {
-					pos = pos.add(0, 1, 0);
-					posAbove = pos.add(0, 1, 0);
-				}
-				// make sure the player isn't standing on air, either
+
+				// make sure the player isn't standing on air
 				BlockPos posBelow = pos.add(0, -1, 0);
 				while (player.world.getBlockState(posBelow).getBlock() == Blocks.AIR) {
 					pos = posBelow;
 					posBelow = posBelow.add(0, -1, 0);
+				}
+				// Ensure they player isn't buried
+				BlockPos posAbove = pos.add(0, 1, 0);
+				while (player.world.getBlockState(pos).getBlock() != Blocks.AIR || player.world.getBlockState(posAbove).getBlock() != Blocks.AIR) {
+					pos = pos.add(0, 1, 0);
+					posAbove = pos.add(0, 1, 0);
 				}
 
 				// Send the player on their way

@@ -15,7 +15,7 @@ import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.common.util.Constants;
 
 public class TransporterList extends WorldSavedData {
-	private static final String NAME = Transporter.MODID + "TRANSPORTER_LIST";
+	private static final String NAME = Transporter.MODID + "_transporter_list";
 	
 	private List<BlockPos> list= new ArrayList<BlockPos>();
 	
