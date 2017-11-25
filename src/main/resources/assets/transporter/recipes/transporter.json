@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "transporter:transporter"
+  },
+  "pattern": [
+    "ooo",
+    "odo",
+    "ooo"
+  ],
+  "type": "forge:ore_shaped",
+  "key": {
+    "o": {
+      "item": "minecraft:obsidian"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    }
+  }
+}

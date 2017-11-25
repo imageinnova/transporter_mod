@@ -45,7 +45,7 @@ public class MessageTransport implements IMessage {
 
 		@Override
 		public IMessage onMessage(final MessageTransport message, MessageContext ctx) {
-			EntityPlayer player = ctx.getServerHandler().playerEntity;
+			EntityPlayer player = ctx.getServerHandler().player;
 			
 			if (player.openContainer instanceof ContainerTransporter) {
 				ContainerTransporter container = (ContainerTransporter) player.openContainer;
@@ -55,8 +55,8 @@ public class MessageTransport implements IMessage {
 				// position to get chunk load rolling
 				player.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
 				Chunk ch = player.world.getChunkFromBlockCoords(pos);
-				ch = player.world.getChunkProvider().getLoadedChunk(ch.xPosition, ch.zPosition);
-				while (!player.world.isChunkGeneratedAt(ch.xPosition, ch.zPosition) || !ch.isLoaded()) {
+				ch = player.world.getChunkProvider().getLoadedChunk(ch.x, ch.z);
+				while (!player.world.isChunkGeneratedAt(ch.x, ch.z) || !ch.isLoaded()) {
 					//
 				};
 

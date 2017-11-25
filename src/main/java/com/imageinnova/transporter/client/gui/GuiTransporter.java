@@ -157,8 +157,8 @@ public class GuiTransporter extends GuiContainer {
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		final int LABEL_XPOS = 5;
 		final int LABEL_YPOS = 5;
-		fontRendererObj.drawString(te.getDisplayName().getUnformattedText(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
-		fontRendererObj.drawString("Distance", LABEL_XPOS, guiTop + 62, Color.darkGray.getRGB());
+		fontRenderer.drawString(te.getDisplayName().getUnformattedText(), LABEL_XPOS, LABEL_YPOS, Color.darkGray.getRGB());
+		fontRenderer.drawString("Distance", LABEL_XPOS, guiTop + 62, Color.darkGray.getRGB());
 	}
 	
 	@Override

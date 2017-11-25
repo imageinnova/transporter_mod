@@ -48,7 +48,7 @@ public class MessageTransporterList implements IMessage {
 
 		@Override
 		public IMessage onMessage(MessageTransporterList message, MessageContext ctx) {
-			List<BlockPos> list = TransporterList.get(ctx.getServerHandler().playerEntity.world).getList();
+			List<BlockPos> list = TransporterList.get(ctx.getServerHandler().player.world).getList();
 			
 			return new MessageTransporterList(list);
 		}

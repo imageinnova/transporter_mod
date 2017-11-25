@@ -9,10 +9,12 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -20,11 +22,14 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 public class BlockTransporter extends Block implements ITileEntityProvider {
-	protected BlockTransporter(String unlocalizedName) {
+	public BlockTransporter(String unlocalizedName) {
 		super(Material.IRON);
 		this.setRegistryName(Transporter.MODID, unlocalizedName);
 		this.setUnlocalizedName(unlocalizedName);
@@ -33,6 +38,11 @@ public class BlockTransporter extends Block implements ITileEntityProvider {
 		this.setResistance(6.0f);
 		this.setHarvestLevel("pickaxe", 2);
 		this.setLightLevel(0.5f); 
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void initModel() {
+		ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
 	}
 
 	@Override
